@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bir Hata Oluştu | NotOnline</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, Arial, sans-serif;
+            background: #f5f7fc;
+            color: #172033;
+        }
+
+        .error-container {
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 42px;
+            color: #172033;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 13px;
+            background: #4f46e5;
+            color: #ffffff;
+            font-size: 23px;
+            font-weight: 800;
+            box-shadow: 0 5px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .error-card {
+            padding: 42px 32px;
+            background: #ffffff;
+            border: 1px solid #e8ecf5;
+            border-radius: 24px;
+            box-shadow: 0 16px 45px rgba(25, 35, 70, 0.06);
+        }
+
+        .error-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 24px;
+            border-radius: 24px;
+            background: #fff1f2;
+            color: #e11d48;
+            font-size: 38px;
+            font-weight: 700;
+        }
+
+        .error-code {
+            margin-bottom: 10px;
+            color: #e11d48;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .error-title {
+            margin-bottom: 14px;
+            font-size: 26px;
+            font-weight: 750;
+            letter-spacing: -0.8px;
+        }
+
+        .error-description {
+            max-width: 360px;
+            margin: 0 auto 28px;
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+            padding: 0 20px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .button-primary {
+            background: #4f46e5;
+            color: #ffffff;
+        }
+
+        .button-primary:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+
+        .button-secondary {
+            background: #ffffff;
+            color: #334155;
+            border-color: #e2e8f0;
+        }
+
+        .button-secondary:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        .button:focus-visible {
+            outline: 3px solid #a5b4fc;
+            outline-offset: 4px;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .brand {
+                margin-bottom: 28px;
+            }
+
+            .error-card {
+                padding: 34px 20px;
+                border-radius: 20px;
+            }
+
+            .error-title {
+                font-size: 23px;
+            }
+
+            .error-description {
+                font-size: 14px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="error-container">
+
+        <a href="/" class="brand" aria-label="NotOnline ana sayfa">
+            <span class="brand-icon">N</span>
+            <span>NotOnline</span>
+        </a>
+
+        <section class="error-card">
+            <div class="error-icon" aria-hidden="true">!</div>
+
+            <div class="error-code">500 · SUNUCU HATASI</div>
+
+            <h1 class="error-title">Beklenmeyen bir hata oluştu</h1>
+
+            <p class="error-description">
+                İsteğin işlenirken bir sorun oluştu. Bu durum geçici
+                olabilir. Lütfen tekrar dene veya ana sayfaya dön.
+            </p>
+
+            <div class="actions">
+                <button
+                    type="button"
+                    class="button button-primary"
+                    onclick="window.location.reload()">
+                    ↻ Tekrar Dene
+                </button>
+
+                <a href="/" class="button button-secondary">
+                    ← Ana Sayfaya Dön
+                </a>
+            </div>
+        </section>
+
+        <p class="footer">
+            © NotOnline · Notlarını düzenle, fikirlerini sakla.
+        </p>
+
+    </main>
+</body>
+</html>

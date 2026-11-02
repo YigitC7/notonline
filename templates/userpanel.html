@@ -1,0 +1,819 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Defterlerim | NotOnline</title>
+    <meta name="description" content="NotOnline kişisel not defterlerini yönet.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --text: #172033;
+            --muted: #64748b;
+            --border: #e8ecf5;
+            --background: #f8faff;
+            --white: #ffffff;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        button {
+            font: inherit;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 17px max(28px, calc((100% - 1160px) / 2));
+            background: rgba(255, 255, 255, 0.94);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .logo-icon {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: white;
+            background: linear-gradient(135deg, #6366f1, #4338ca);
+            box-shadow: 0 5px 14px #4f46e52e;
+        }
+
+        .logo-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 17px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 17px;
+            border-right: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 37px;
+            height: 37px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: var(--primary);
+            background: #eef2ff;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .profile-label {
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .profile-name {
+            max-width: 150px;
+            overflow: hidden;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: #dc2626;
+            border-color: #fecaca;
+            background: #fff7f7;
+        }
+
+        .logout-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        main {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 48px 28px 80px;
+        }
+
+        .welcome {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 25px;
+            margin-bottom: 38px;
+        }
+
+        .welcome-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .welcome-label span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #6366f1;
+        }
+
+        .welcome h1 {
+            margin-bottom: 12px;
+            font-size: clamp(30px, 4vw, 39px);
+            font-weight: 800;
+            letter-spacing: -1.8px;
+        }
+
+        .welcome h1 span {
+            color: var(--primary);
+        }
+
+        .welcome p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .new-book-form {
+            flex-shrink: 0;
+        }
+
+        .new-book-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 48px;
+            padding: 0 19px;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-size: 13px;
+            font-weight: 750;
+            cursor: pointer;
+            box-shadow: 0 7px 18px #4f46e52b;
+            transition: 0.2s;
+        }
+
+        .new-book-btn:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark);
+            box-shadow: 0 10px 23px #4f46e53a;
+        }
+
+        .new-book-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 21px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .count {
+            display: inline-grid;
+            min-width: 27px;
+            height: 26px;
+            padding: 0 7px;
+            place-items: center;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            background: #eef2ff;
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 750;
+        }
+
+        .section-subtitle {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            min-width: 0;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: var(--white);
+            transition: transform 0.2s, box-shadow 0.2s,
+                        border-color 0.2s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-3px);
+            border-color: #d8ddff;
+            box-shadow: 0 14px 32px #26345b0c;
+        }
+
+        .book-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 23px;
+        }
+
+        .book-icon {
+            width: 45px;
+            height: 45px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #e0e7ff;
+            border-radius: 13px;
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .book-icon svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .book-type {
+            padding: 6px 9px;
+            border-radius: 7px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .book-name {
+            margin-bottom: 9px;
+            overflow-wrap: anywhere;
+            font-size: 17px;
+            font-weight: 750;
+            letter-spacing: -0.4px;
+        }
+
+        .book-description {
+            min-height: 36px;
+            margin-bottom: 22px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .book-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 17px;
+            border-top: 1px solid #f0f2f8;
+        }
+
+        .open-form {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .open-btn {
+            width: 100%;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 0 12px;
+            border: 1px solid #e0e7ff;
+            border-radius: 9px;
+            background: #eef2ff;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .open-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .open-btn svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .remove-form {
+            flex-shrink: 0;
+        }
+
+        .remove-btn {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: white;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .remove-btn:hover {
+            border-color: #fecaca;
+            background: #fff1f2;
+            color: #dc2626;
+        }
+
+        .remove-btn svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            padding: 60px 25px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 18px;
+            background: #ffffffb8;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 65px;
+            height: 65px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 20px;
+            border-radius: 19px;
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .empty-icon svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .empty-state h2 {
+            margin-bottom: 10px;
+            font-size: 19px;
+            letter-spacing: -0.4px;
+        }
+
+        .empty-state p {
+            max-width: 350px;
+            margin: 0 auto 23px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .bottom-tip {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-top: 35px;
+            padding: 19px 21px;
+            border: 1px solid #e0e7ff;
+            border-radius: 14px;
+            background: #f1f4ff;
+        }
+
+        .tip-icon {
+            width: 37px;
+            height: 37px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: white;
+            color: var(--primary);
+            font-size: 17px;
+        }
+
+        .tip-text strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .tip-text p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        footer {
+            padding: 22px;
+            border-top: 1px solid var(--border);
+            background: white;
+            color: #94a3b8;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .books-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .navbar {
+                padding: 16px 22px;
+            }
+
+            main {
+                padding: 38px 22px 60px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 14px 16px;
+            }
+
+            .logo {
+                gap: 8px;
+                font-size: 20px;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .nav-right {
+                gap: 10px;
+            }
+
+            .profile {
+                padding-right: 0;
+                border-right: none;
+            }
+
+            .avatar {
+                width: 34px;
+                height: 34px;
+            }
+
+            .profile-label {
+                display: none;
+            }
+
+            .profile-name {
+                max-width: 80px;
+                font-size: 12px;
+            }
+
+            .logout-btn {
+                width: 37px;
+                height: 37px;
+                padding: 0;
+            }
+
+            .logout-btn span {
+                display: none;
+            }
+
+            main {
+                padding: 32px 16px 50px;
+            }
+
+            .welcome {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 22px;
+                margin-bottom: 32px;
+            }
+
+            .welcome h1 {
+                font-size: 32px;
+            }
+
+            .new-book-form,
+            .new-book-btn {
+                width: 100%;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .book-card {
+                padding: 20px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .bottom-tip {
+                align-items: flex-start;
+                padding: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6"/>
+                    <path d="M8 13h8M8 17h8"/>
+                </svg>
+            </span>
+            NotOnline
+        </a>
+
+        <div class="nav-right">
+            <div class="profile">
+                <div class="avatar" aria-hidden="true">
+                    {{ username[0]|upper }}
+                </div>
+
+                <div>
+                    <div class="profile-label">Hesabım</div>
+                    <div class="profile-name">{{ username }}</div>
+                </div>
+            </div>
+
+            <form class="logout-form"
+                  action="/local-api/cikis-yap" method="post">
+                <button type="submit" class="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <path d="M16 17l5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                    </svg>
+                    <span>Çıkış Yap</span>
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <div>
+                <div class="welcome-label">
+                    <span></span>
+                    KİŞİSEL ÇALIŞMA ALANIN
+                </div>
+
+                <h1>
+                    Tekrar hoş geldin,
+                    <span>{{ username }}</span>!
+                </h1>
+
+            </div>
+
+            <form class="new-book-form"
+                  action="/yeni-defter" method="post">
+                <button type="submit" class="new-book-btn">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Yeni Defter Oluştur
+                </button>
+            </form>
+        </section>
+
+        <section>
+            <div class="section-heading">
+                <h2 class="section-title">
+                    Defterlerim
+                    <span class="count">{{ books|length }}</span>
+                </h2>
+
+                <p class="section-subtitle">
+                    Tüm not defterlerin tek bir yerde.
+                </p>
+            </div>
+
+            <div class="books-grid">
+
+                {% for book in books %}
+                    <article class="book-card">
+
+                        <div class="book-top">
+                            <div class="book-icon">
+                                <svg viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>
+                                    <path d="M8 7h8M8 11h8"/>
+                                </svg>
+                            </div>
+
+                            <span class="book-type">NOT DEFTERİ</span>
+                        </div>
+
+                        <h3 class="book-name">{{ book }}</h3>
+
+                        <p class="book-description">
+                            Fikirlerini ve notlarını bu defterde tut.
+                        </p>
+
+                        <div class="book-actions">
+                            <form class="open-form"
+                                  action="/defter/{{ username }}/{{ book }}"
+                                  method="get">
+                                <button type="submit" class="open-btn">
+                                    <span>Defteri Aç</span>
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </button>
+                            </form>
+
+                            <form class="remove-form"
+                                  action="/local-api/defter/kaldir"
+                                  method="post"
+                                  onsubmit="return confirm('Bu defteri kaldırmak istediğine emin misin?');">
+                                <button
+                                    type="submit"
+                                    value="{{ book }}"
+                                    name="book"
+                                    class="remove-btn"
+                                    title="Defteri kaldır"
+                                    aria-label="{{ book }} defterini kaldır"
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         aria-hidden="true">
+                                        <path d="M3 6h18"/>
+                                        <path d="M8 6V4h8v2"/>
+                                        <path d="m19 6-1 14H6L5 6"/>
+                                        <path d="M10 11v5M14 11v5"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.7"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>
+                                <path d="M12 7v6M9 10h6"/>
+                            </svg>
+                        </div>
+
+                        <h2>Henüz bir defterin yok</h2>
+
+                        <p>
+                            İlk not defterini oluşturarak fikirlerini
+                            kaydetmeye başlayabilirsin.
+                        </p>
+
+                        <form action="/yeni-defter" method="post">
+                            <button type="submit" class="new-book-btn">
+                                + İlk Defterimi Oluştur
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </section>
+
+        <aside class="bottom-tip">
+            <div class="tip-icon">✦</div>
+
+            <div class="tip-text">
+                <strong>Notlarını düzenli tut.</strong>
+                <p>
+                    Her konu için ayrı bir defter oluşturabilir,
+                    notlarını kendi çalışma düzenine göre ayırabilirsin.
+                </p>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        © 2026 NotOnline · YigitC7
+    </footer>
+
+</body>
+</html>

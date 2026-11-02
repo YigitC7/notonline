@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NotOnline - Notların Her Zaman Yanında</title>
+
+    <meta name="description" content="NotOnline ile notlarını çevrimiçi oluştur, düzenle ve istediğin zaman eriş. Fikirlerini kaybetme, aklındakileri özgürce yaz.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --text: #172033;
+            --muted: #64748b;
+            --background: #f8faff;
+            --border: #e8ecf5;
+        }
+
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .navbar {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 26px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #6366f1, #4338ca);
+            color: white;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 5px 14px #4f46e533;
+        }
+
+        .logo-icon svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .nav-text {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .nav-text strong {
+            color: var(--text);
+        }
+
+        .hero {
+            max-width: 1200px;
+            margin: auto;
+            padding: 65px 28px 90px;
+            display: grid;
+            grid-template-columns: 1fr 0.9fr;
+            align-items: center;
+            gap: 65px;
+        }
+
+        .hero-content {
+            max-width: 590px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 14px;
+            border: 1px solid #e0e7ff;
+            background: #eef2ff;
+            color: #4338ca;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 650;
+            margin-bottom: 27px;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #6366f1;
+        }
+
+        h1 {
+            font-size: clamp(42px, 5vw, 65px);
+            line-height: 1.12;
+            letter-spacing: -3px;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        .description {
+            max-width: 490px;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.85;
+            margin-bottom: 33px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+        }
+
+        .actions form {
+            display: flex;
+        }
+
+        .btn {
+            min-height: 52px;
+            padding: 0 25px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: transform 0.2s, box-shadow 0.2s,
+                        background 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            color: white;
+            background: var(--primary);
+            box-shadow: 0 8px 20px #4f46e533;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 10px 25px #4f46e544;
+        }
+
+        .btn-secondary {
+            color: var(--text);
+            background: white;
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+        }
+
+        .hero-note {
+            margin-top: 24px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        /* Sağ taraftaki örnek not defteri */
+
+        .preview {
+            position: relative;
+            padding: 25px;
+        }
+
+        .preview-glow {
+            position: absolute;
+            inset: 10% 0;
+            background: #c7d2fe;
+            filter: blur(85px);
+            opacity: 0.55;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .note-window {
+            background: white;
+            border: 1px solid #e7eaf3;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px #26345b14,
+                        0 5px 20px #26345b08;
+            transform: rotate(1deg);
+        }
+
+        .window-top {
+            padding: 19px 22px;
+            border-bottom: 1px solid #f0f2f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e1;
+        }
+
+        .window-label {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        .note-body {
+            padding: 32px 29px 35px;
+        }
+
+        .note-tag {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #eef2ff;
+            color: #4f46e5;
+            border-radius: 7px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .note-body h2 {
+            font-size: 25px;
+            letter-spacing: -0.8px;
+            margin-bottom: 12px;
+        }
+
+        .note-date {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 24px;
+        }
+
+        .note-line {
+            height: 8px;
+            background: #eef1f7;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .note-line.long {
+            width: 100%;
+        }
+
+        .note-line.medium {
+            width: 82%;
+        }
+
+        .note-line.short {
+            width: 58%;
+        }
+
+        .note-divider {
+            height: 1px;
+            background: #f0f2f8;
+            margin: 25px 0;
+        }
+
+        .note-footer {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .note-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .floating-card {
+            position: absolute;
+            right: -3px;
+            bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid var(--border);
+            padding: 15px 18px;
+            border-radius: 15px;
+            box-shadow: 0 12px 35px #26345b12;
+        }
+
+        .floating-icon {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: #ecfdf5;
+            color: #059669;
+            font-size: 18px;
+        }
+
+        .floating-title {
+            font-size: 12px;
+            font-weight: 750;
+            margin-bottom: 4px;
+        }
+
+        .floating-subtitle {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        /* Özellikler */
+
+        .features {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 28px 75px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .feature {
+            padding: 25px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px #26345b0c;
+        }
+
+        .feature-icon {
+            width: 43px;
+            height: 43px;
+            display: grid;
+            place-items: center;
+            background: #eef2ff;
+            color: #4f46e5;
+            border-radius: 12px;
+            margin-bottom: 19px;
+        }
+
+        .feature-icon svg {
+            width: 21px;
+            height: 21px;
+        }
+
+        .feature h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .feature p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 24px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        @media (max-width: 850px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 35px;
+                padding-top: 45px;
+            }
+
+            .hero-content {
+                max-width: 650px;
+            }
+
+            .preview {
+                max-width: 520px;
+                width: 100%;
+                margin: auto;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .feature {
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 20px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-text {
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 38px 20px 60px;
+            }
+
+            h1 {
+                font-size: 43px;
+                letter-spacing: -2px;
+            }
+
+            .description {
+                font-size: 15px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions form,
+            .btn {
+                width: 100%;
+            }
+
+            .preview {
+                padding: 12px 4px 25px;
+            }
+
+            .note-body {
+                padding: 25px 20px;
+            }
+
+            .floating-card {
+                right: -3px;
+                bottom: -5px;
+                padding: 11px 13px;
+            }
+
+            .features {
+                padding: 0 20px 50px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a class="logo" href="/" aria-label="NotOnline ana sayfa">
+            <span class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6"/>
+                    <path d="M8 13h8M8 17h8"/>
+                </svg>
+            </span>
+            NotOnline
+        </a>
+
+        <div class="nav-text">
+            Geliştirici <strong>Yiğit Çıtak</strong>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+
+            <div class="hero-content">
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Dijital not defterin
+                </div>
+
+                <h1>
+                    Aklındakileri<br>
+                    <span>kaybetme.</span>
+                </h1>
+
+                <p class="description">
+                    Fikirlerini, planlarını ve önemli notlarını tek bir yerde
+                    topla. NotOnline ile kendine ait dijital not defterleri
+                    oluştur, düşüncelerini düzenle ve yazmaya özgürce devam et.
+                </p>
+
+                <div class="actions">
+                    <form action="/kayit" method="post">
+                        <button type="submit" class="btn btn-primary">
+                            Hesap Oluştur →
+                        </button>
+                    </form>
+
+                    <form action="/giris" method="post">
+                        <button type="submit" class="btn btn-secondary">
+                            Giriş Yap
+                        </button>
+                    </form>
+                </div>
+
+                <p class="hero-note">
+                    ✦ Bir hesap oluştur, kendi not defterini oluşturmaya başla.
+                </p>
+            </div>
+
+            <div class="preview">
+                <div class="preview-glow"></div>
+
+                <div class="note-window">
+                    <div class="window-top">
+                        <div class="window-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span class="window-label">NOTONLINE / NOTLARIM</span>
+                    </div>
+
+                    <div class="note-body">
+                        <span class="note-tag">KİŞİSEL NOTLAR</span>
+
+                        <h2>Yeni fikirlerim ✨</h2>
+                        <p class="note-date">Bugün · Kendi not defterim</p>
+
+                        <div class="note-line long"></div>
+                        <div class="note-line medium"></div>
+                        <div class="note-line long"></div>
+                        <div class="note-line short"></div>
+
+                        <div class="note-divider"></div>
+
+                        <div class="note-line medium"></div>
+                        <div class="note-line long"></div>
+                        <div class="note-line short"></div>
+
+                        <div class="note-divider"></div>
+
+                        <div class="note-footer">
+                            <span class="note-status"></span>
+                            Düşüncelerin burada hayat bulur.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="floating-card">
+                    <div class="floating-icon">✓</div>
+                    <div>
+                        <div class="floating-title">Yeni bir başlangıç</div>
+                        <div class="floating-subtitle">Notlarını yazmaya başla</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="features">
+            <div class="features-grid">
+
+                <article class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L9 17l-4 1 1-4Z"/>
+                        </svg>
+                    </div>
+                    <h3>Dilediğini yaz</h3>
+                    <p>
+                        Aklına gelen fikirleri, günlük notlarını ve planlarını
+                        kendi dijital defterlerinde bir araya getir.
+                    </p>
+                </article>
+
+                <article class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="17" rx="2"/>
+                            <path d="M16 2v4M8 2v4M3 10h18"/>
+                            <path d="m9 15 2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h3>Notlarını düzenle</h3>
+                    <p>
+                        Farklı konular için ayrı defterler oluştur.
+                        Düşüncelerini düzenli tut ve aradığını kolayca bul.
+                    </p>
+                </article>
+
+                <article class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 7v5l3 2"/>
+                        </svg>
+                    </div>
+                    <h3>Kaldığın yerden devam et</h3>
+                    <p>
+                        Notlarını çevrimiçi ortamda tut ve yeni fikirlerin
+                        ortaya çıktığında defterine geri dön.
+                    </p>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 NotOnline · YigitC7
+    </footer>
+
+</body>
+</html>

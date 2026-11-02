@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Yeni Defter Oluştur | NotOnline</title>
+
+    <meta name="description" content="NotOnline üzerinde yeni bir dijital not defteri oluştur.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --text: #172033;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --background: #f8faff;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .navbar {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 23px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .logo-icon {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            color: white;
+            background: linear-gradient(135deg, #6366f1, #4338ca);
+            box-shadow: 0 5px 14px #4f46e52e;
+        }
+
+        .logo-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 650;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .back-link svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 35px 20px 65px;
+        }
+
+        .layout {
+            width: 100%;
+            max-width: 960px;
+            display: grid;
+            grid-template-columns: 1fr 430px;
+            align-items: center;
+            gap: 65px;
+        }
+
+        .intro {
+            padding: 15px 0;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 13px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e7ff;
+            border-radius: 30px;
+            background: #eef2ff;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .eyebrow span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #6366f1;
+        }
+
+        .intro h1 {
+            margin-bottom: 20px;
+            font-size: clamp(38px, 4.5vw, 53px);
+            line-height: 1.15;
+            letter-spacing: -2.5px;
+        }
+
+        .intro h1 span {
+            color: var(--primary);
+        }
+
+        .intro > p {
+            max-width: 390px;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        .preview {
+            max-width: 370px;
+            margin-top: 35px;
+            padding: 21px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            background: white;
+        }
+
+        .preview-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 17px;
+        }
+
+        .preview-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .preview-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .preview-title {
+            margin-bottom: 4px;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .preview-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .preview-line {
+            height: 7px;
+            margin-top: 10px;
+            border-radius: 10px;
+            background: #eef1f7;
+        }
+
+        .preview-line:nth-child(2) {
+            width: 90%;
+        }
+
+        .preview-line:nth-child(3) {
+            width: 72%;
+        }
+
+        .preview-line:nth-child(4) {
+            width: 82%;
+        }
+
+        .create-card {
+            padding: 34px;
+            border: 1px solid #e8ecf5;
+            border-radius: 22px;
+            background: white;
+            box-shadow: 0 20px 60px #26345b0c;
+        }
+
+        .card-heading {
+            margin-bottom: 28px;
+        }
+
+        .card-heading h2 {
+            margin-bottom: 9px;
+            font-size: 25px;
+            letter-spacing: -0.8px;
+        }
+
+        .card-heading p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            height: 50px;
+            padding: 0 15px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            outline: none;
+            background: white;
+            color: var(--text);
+            font-size: 13px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input[type="text"]::placeholder {
+            color: #a0aabd;
+        }
+
+        .form-group input[type="text"]:hover {
+            border-color: #cbd5e1;
+        }
+
+        .form-group input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px #4f46e51a;
+        }
+
+        .visibility-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fbfcff;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .visibility-option:has(input:checked) {
+            border-color: #a5b4fc;
+            background: #f5f6ff;
+        }
+
+        .checkbox-wrap {
+            width: 21px;
+            height: 21px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .checkbox-wrap input {
+            width: 19px;
+            height: 19px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .visibility-text {
+            flex: 1;
+        }
+
+        .visibility-title {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .public-badge {
+            padding: 4px 7px;
+            border-radius: 6px;
+            background: #dcfce7;
+            color: #15803d;
+            font-size: 10px;
+            font-weight: 750;
+        }
+
+        .visibility-description {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .visibility-status {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 12px;
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #94a3b8;
+        }
+
+        .visibility-option:has(input:checked) ~ .visibility-status {
+            color: #15803d;
+        }
+
+        .visibility-option:has(input:checked) ~ .visibility-status .status-dot {
+            background: #22c55e;
+        }
+
+        .message {
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            border: 1px solid #ffe0e4;
+            border-radius: 10px;
+            background: #fff1f2;
+            color: #be123c;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .submit-btn {
+            width: 100%;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 11px;
+            background: var(--primary);
+            color: white;
+            font-size: 14px;
+            font-weight: 750;
+            cursor: pointer;
+            box-shadow: 0 7px 18px #4f46e526;
+            transition: background 0.2s, transform 0.2s,
+                        box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            background: var(--primary-dark);
+            box-shadow: 0 10px 22px #4f46e533;
+        }
+
+        .submit-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .card-footer {
+            margin-top: 21px;
+            color: #94a3b8;
+            font-size: 11px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        footer {
+            padding: 22px;
+            border-top: 1px solid var(--border);
+            background: white;
+            color: #94a3b8;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 850px) {
+            .layout {
+                max-width: 480px;
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .intro {
+                text-align: center;
+            }
+
+            .intro > p {
+                margin: 0 auto;
+            }
+
+            .preview {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 17px 20px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .back-link {
+                font-size: 12px;
+            }
+
+            main {
+                padding: 25px 16px 40px;
+            }
+
+            .intro h1 {
+                font-size: 39px;
+                letter-spacing: -1.8px;
+            }
+
+            .intro > p {
+                font-size: 14px;
+            }
+
+            .create-card {
+                padding: 25px 21px;
+                border-radius: 18px;
+            }
+
+            .card-heading h2 {
+                font-size: 23px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="/" class="logo">
+            <span class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6"/>
+                    <path d="M8 13h8M8 17h8"/>
+                </svg>
+            </span>
+            NotOnline
+        </a>
+
+        <a href="/" class="back-link">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+                <path d="m15 18-6-6 6-6"/>
+            </svg>
+            Ana Sayfa
+        </a>
+    </header>
+
+    <main>
+        <div class="layout">
+
+            <section class="intro">
+                <div class="eyebrow">
+                    <span></span>
+                    YENİ BİR BAŞLANGIÇ
+                </div>
+
+                <h1>
+                    Yeni fikirler,<br>
+                    <span>yeni bir defter.</span>
+                </h1>
+
+                <p>
+                    Her defter yeni bir düşünce alanı. Defterine bir isim
+                    ver, görünürlüğünü belirle ve fikirlerini kaydetmeye
+                    başlamaya hazır ol.
+                </p>
+
+                <div class="preview">
+                    <div class="preview-top">
+                        <div class="preview-icon">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>
+                                <path d="M8 7h8M8 11h8"/>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <div class="preview-title">Yeni defterin</div>
+                            <div class="preview-subtitle">Fikirlerin için boş bir sayfa</div>
+                        </div>
+                    </div>
+
+                    <div class="preview-line"></div>
+                    <div class="preview-line"></div>
+                    <div class="preview-line"></div>
+                </div>
+            </section>
+
+            <section class="create-card">
+                <div class="card-heading">
+                    <h2>Defter oluştur</h2>
+                    <p>Defterinin temel bilgilerini belirle.</p>
+                </div>
+
+                <form action="/yeni-defter" method="post">
+
+                    <div class="form-group">
+                        <label for="bookname">Defter adı</label>
+
+                        <input
+                            type="text"
+                            id="bookname"
+                            name="bookname"
+                            placeholder="Yaz..."
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Görünürlük ayarları</label>
+
+                        <label class="visibility-option" for="public">
+                            <span class="checkbox-wrap">
+                                <input
+                                    type="checkbox"
+                                    id="public"
+                                    name="public"
+                                    value="1"
+                                >
+                            </span>
+
+                            <span class="visibility-text">
+                                <span class="visibility-title">
+                                    Herkese açık
+                                    <span class="public-badge">PUBLIC</span>
+                                </span>
+
+                                <span class="visibility-description">
+                                    Bu seçeneği etkinleştirirsen defterin
+                                    herkese açık olur. Diğer kişiler
+                                    defterini görüntüleyebilir.
+                                </span>
+                            </span>
+                        </label>
+
+                        <div class="visibility-status"
+                             id="visibility-status"
+                             aria-live="polite">
+                            <span class="status-dot"></span>
+                            <span id="visibility-text">
+                                Özel defter · Yalnızca izin verilen erişim
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if message %}
+                        <div class="message" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="submit-btn">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Defteri Oluştur
+                    </button>
+
+                </form>
+
+                <div class="card-footer">
+                    Görünürlük ayarını daha sonra uygulamanın
+                    desteklediği ayarlar bölümünden değiştirebilirsin.
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        © 2026 NotOnline · YigitC7
+    </footer>
+
+    <script>
+        const publicCheckbox = document.getElementById("public");
+        const visibilityText = document.getElementById("visibility-text");
+
+        publicCheckbox.addEventListener("change", function () {
+            if (this.checked) {
+                visibilityText.textContent =
+                    "Herkese açık defter · Diğer kişiler görüntüleyebilir";
+            } else {
+                visibilityText.textContent =
+                    "Özel defter · Yalnızca izin verilen erişim";
+            }
+        });
+    </script>
+
+</body>
+</html>

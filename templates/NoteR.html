@@ -1,0 +1,522 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ NoteDatas[1] }} | NotOnline</title>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f5f7fc;
+            --surface: #ffffff;
+            --text: #172033;
+            --muted: #64748b;
+            --border: #e5e9f2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text);
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", sans-serif;
+        }
+
+        button,
+        input,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 72px;
+            padding: 12px 5%;
+            background: rgba(255, 255, 255, 0.94);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .brand-icon {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 13px;
+            background: var(--primary);
+            color: white;
+            font-size: 23px;
+            font-weight: 800;
+            box-shadow: 0 5px 14px rgba(79, 70, 229, 0.2);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-subtitle {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .nav-form {
+            margin: 0;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 40px;
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 650;
+            text-decoration: none;
+            transition: background 0.18s, border-color 0.18s,
+                        transform 0.18s;
+        }
+
+        .button:hover {
+            background: #f8faff;
+            border-color: #cbd5e1;
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+
+        .main {
+            width: min(1100px, 92%);
+            margin: 35px auto 50px;
+        }
+
+        .heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        .heading-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .public-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .book-title {
+            max-width: 700px;
+            margin: 0;
+            overflow-wrap: anywhere;
+            font-size: clamp(25px, 4vw, 36px);
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            line-height: 1.2;
+        }
+
+        .description {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .viewer-card {
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--surface);
+            box-shadow: 0 10px 35px rgba(26, 39, 73, 0.055);
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #fcfcff;
+        }
+
+        .page-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .page-input {
+            width: 78px;
+            height: 39px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            background: white;
+            color: var(--text);
+            font-weight: 750;
+            text-align: center;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .page-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .page-total {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .readonly-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .document {
+            min-height: 500px;
+            padding: 28px 30px;
+            background: white;
+        }
+
+        .note-content {
+            min-height: 440px;
+            margin: 0;
+            color: #263247;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 17px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .empty-note {
+            color: #a0a9b8;
+            font-style: italic;
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            background: #fcfcff;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer-stats {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .bottom-note {
+            margin-top: 17px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                padding: 12px 4%;
+            }
+
+            .brand-subtitle {
+                display: none;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .top-actions {
+                gap: 6px;
+            }
+
+            .button {
+                min-height: 38px;
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .main {
+                width: 94%;
+                margin-top: 26px;
+            }
+
+            .heading {
+                margin-bottom: 18px;
+            }
+
+            .book-title {
+                font-size: 27px;
+            }
+
+            .viewer-card {
+                border-radius: 14px;
+            }
+
+            .toolbar {
+                align-items: flex-start;
+                padding: 13px;
+            }
+
+            .document {
+                min-height: 55vh;
+                padding: 20px 17px;
+            }
+
+            .note-content {
+                min-height: 50vh;
+                font-size: 16px;
+                line-height: 1.8;
+            }
+
+            .footer {
+                padding: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon">N</div>
+
+        <div>
+            <div class="brand-name">NotOnline</div>
+            <div class="brand-subtitle">Düşüncelerini keşfet.</div>
+        </div>
+    </div>
+
+    <div class="top-actions">
+        <form
+            class="nav-form"
+            action="/defter/i/{{ NoteDatas[0] }}/{{ NoteDatas[1] }}"
+            method="get"
+        >
+            <button class="button" type="submit">ⓘ Bilgiler</button>
+        </form>
+
+        <form class="nav-form" action="/" method="get">
+            <button class="button" type="submit">Ana Menü</button>
+        </form>
+    </div>
+</header>
+
+<main class="main">
+
+    <section class="heading">
+        <div>
+            <div class="heading-label">
+                <span class="public-dot"></span>
+                Herkese açık defter
+            </div>
+
+            <h1 class="book-title">{{ NoteDatas[1] }}</h1>
+
+            <p class="description">
+                Bu defterin içeriğini görüntülüyorsun.
+            </p>
+        </div>
+    </section>
+
+    <section class="viewer-card">
+
+        <div class="toolbar">
+            <div class="page-controls">
+                <label class="page-label" for="bookPage">Sayfa</label>
+
+                <input
+                    class="page-input"
+                    type="number"
+                    id="bookPage"
+                    min="1"
+                    max="800"
+                    step="1"
+                    value="1"
+                    aria-label="Görüntülenecek sayfa"
+                >
+
+                <span class="page-total">/ 800</span>
+            </div>
+
+            <div class="readonly-label">
+                <span>◉</span>
+                Salt okunur
+            </div>
+        </div>
+
+        <div class="document">
+            <p id="note" class="note-content" aria-live="polite"></p>
+        </div>
+
+        <div class="footer">
+            <div class="footer-stats">
+                <span id="wordCount">0 kelime</span>
+                <span id="charCount">0 / 8000 karakter</span>
+            </div>
+
+            <span id="pageStatus">1. sayfa görüntüleniyor</span>
+        </div>
+
+    </section>
+
+    <p class="bottom-note">
+        Bu defter yalnızca okunabilir. İçerik üzerinde değişiklik yapamazsın.
+    </p>
+
+</main>
+
+<script>
+    // Flask'tan gelen veriler
+    const noteString = {{ NoteDatas[2] | tojson }};
+
+    let notes = {};
+
+    try {
+        if (typeof noteString === "string" && noteString.trim()) {
+            // Eski Python sözlüğü metnini okumayı dene.
+            // Bu yöntem, metin içinde tek tırnak olduğunda güvenilir değildir.
+            notes = JSON.parse(noteString.replace(/'/g, '"'));
+        } else if (
+            noteString !== null &&
+            typeof noteString === "object" &&
+            !Array.isArray(noteString)
+        ) {
+            notes = noteString;
+        }
+    } catch (error) {
+        console.error("Not verisi okunamadı:", error);
+        notes = {};
+    }
+
+    if (!notes || typeof notes !== "object" || Array.isArray(notes)) {
+        notes = {};
+    }
+
+    const pageInput = document.getElementById("bookPage");
+    const noteArea = document.getElementById("note");
+    const wordCount = document.getElementById("wordCount");
+    const charCount = document.getElementById("charCount");
+    const pageStatus = document.getElementById("pageStatus");
+
+    function showPage(page) {
+        page = String(page);
+
+        const content = notes[page];
+
+        noteArea.textContent =
+            typeof content === "string" && content.length > 0
+                ? content
+                : "Bu sayfa henüz boş.";
+
+        noteArea.classList.toggle(
+            "empty-note",
+            typeof content !== "string" || content.length === 0
+        );
+
+        const actualContent =
+            typeof content === "string" ? content : "";
+
+        const trimmed = actualContent.trim();
+        const words = trimmed ? trimmed.split(/\s+/).length : 0;
+
+        wordCount.textContent = `${words} kelime`;
+        charCount.textContent = `${actualContent.length} / 8000 karakter`;
+        pageStatus.textContent = `${page}. sayfa görüntüleniyor`;
+    }
+
+    pageInput.addEventListener("change", function () {
+        const page = Number(this.value);
+
+        if (!Number.isInteger(page) || page < 1 || page > 800) {
+            this.value = "1";
+            showPage(1);
+            return;
+        }
+
+        showPage(page);
+    });
+
+    // İlk açılış
+    showPage(1);
+</script>
+
+</body>
+</html>
